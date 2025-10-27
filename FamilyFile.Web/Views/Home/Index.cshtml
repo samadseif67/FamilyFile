@@ -1,0 +1,499 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+<style>
+	.btnTab {
+		height: 40px;
+		width: 120px;
+		border-top-left-radius: 6px;
+		border-top-right-radius: 6px;
+	}
+
+	.TabNoActive {
+		background-color: #31d2f2;
+	}
+
+	.TabActive {
+		background-color: #95e9c2;
+	}
+
+	#divContent {
+		height: 400px;
+		border: solid 2px #ccc;
+		padding: 3px;
+	}
+
+	#divContentFamilyMember
+	{
+		display: flex;
+		flex-direction: row;
+		justify-content: space-evenly;
+	}
+
+	#tbodyFamilyMember tr
+	{
+		height:20px !important;
+	}
+</style>
+
+<div class="container" style="margin-top:50px;">
+
+	<div class="container">
+		<input type="button" id="btnAddPersonnel" value="افزودن" AtrrElementModalId="exampleModal" class="btn btn-success mb-3" onclick="FuncShowFormPersonnel(this,1);" />
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>نام</th>
+					<th>نام خانوادگی</th>
+					<th>کد ملی</th>
+					<th> شماره تلفن  </th>
+					<th>  عملیات    </th>
+				</tr>
+			</thead>
+			<tbody id="tbodyPersonnel">
+			</tbody>
+		</table>
+	</div>
+
+
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content ">
+			<div class="modal-header btn-info">
+				<button type="button" onclick="FuncCloseThisModal(this);" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+			</div>
+			<div class="modal-body" style="height:500px">
+
+				<div style="display:flex;flex-direction:column;">
+					<div style="display:flex;flex-direction:row;" id="divCollectionTab">
+						<input type="button" class="btnTab TabNoActive" value="اطلاعات پرسنلی" AttrTabState="1" AttrStateActive="1" onclick="FuncActiveTab(this);" />
+						<input type="button" class="btnTab TabNoActive" value="افراد تحت تکفل" AttrTabState="2" AttrStateActive="0" onclick="FuncActiveTab(this);" />
+					</div>
+					<div id="divContent">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
+@section Scripts
+{
+	<script>
+
+
+
+		FuncGetAllPersonnel();
+		function FuncGetAllPersonnel()
+		{
+			 $.ajax({
+			 url:"/Home/GetAllPersonnel",
+			 data:{ },
+			 type:"post",
+			 dataType:"json",
+			 success:function(dataResponse)
+			 {
+				 var text='';
+				var personnels= dataResponse.data;
+				for	(var i=0;i<personnels.length;i++)
+				{
+					 text+=` <tr>
+				<td>${personnels[i].name}</td>
+				<td>${personnels[i].lastName}</td>
+				<td>${personnels[i].nationalCode}</td>
+				<td>${personnels[i].phoneNumber}</td>
+				<td>
+					<input type="button" class="btn btn-warning btn-sm" value="ویرایش" AtrrElementModalId="exampleModal"  AttrPersonnelId="${personnels[i].id}" onclick="FuncShowFormPersonnel(this,2);" />
+					<input type="button" class="btn btn-danger btn-sm" value="حذف"  AttrPersonnelId="${personnels[i].id}" onclick="FuncDeletePersonnel(this);" />
+					<input type="button" class="btn btn-warning btn-sm" value="تحت تکفل" AtrrElementModalId="exampleModal"  AttrPersonnelId="${personnels[i].id}" onclick="FuncShowFormPersonnel(this,3);" />
+				</td>
+				</tr>`;
+				}
+				$("#tbodyPersonnel").html(text);
+			 }
+		 })
+		}
+
+		 function FuncShowFormPersonnel(element,stateAddOrEdit)
+		{
+			
+			if(stateAddOrEdit==1)
+			{
+			 $("#divContent").attr("AttrPersonnelId","0");
+			 FuncActiveTab($("#divCollectionTab").find("[AttrTabState=1]"));
+			}
+			if(stateAddOrEdit==2)
+			{
+			 $("#divContent").attr("AttrPersonnelId",$(element).attr("AttrPersonnelId"));
+			 FuncActiveTab($("#divCollectionTab").find("[AttrTabState=1]"));
+			}
+		   if(stateAddOrEdit==3)
+			{
+			 $("#divContent").attr("AttrPersonnelId",$(element).attr("AttrPersonnelId"));
+			 FuncActiveTab($("#divCollectionTab").find("[AttrTabState=2]"));
+		   }
+
+			var elementModalId=$(element).attr("AtrrElementModalId");
+			$("#"+elementModalId).addClass("show");
+			$("#"+elementModalId).css("display","block");
+
+
+		}
+
+
+		function FuncActiveTab(element)
+		{
+			 $("#divCollectionTab").find("input.btnTab").removeClass("TabActive");
+			 $("#divCollectionTab").find("input.btnTab").removeClass("TabNoActive");
+			 $("#divCollectionTab").find("input.btnTab").addClass("TabNoActive");
+			 $(element).addClass("TabActive");
+
+			 $("#divCollectionTab").find("input.btnTab").attr("AttrStateActive",0);
+			 $(element).attr("AttrStateActive",1);
+
+
+		   var personnelId=$("#divContent").attr("AttrPersonnelId");
+		   var TabState=$("#divCollectionTab").find("[AttrStateActive=1]").attr("AttrTabState");
+		   if(TabState==1)
+		   {
+			   FuncCreateTemplatePersonnel();
+			   FuncGetPersonnel();
+		   }
+		   if(TabState==2 && personnelId=="0")
+		   {   
+				FuncActiveTab($("#divCollectionTab").find("[AttrTabState=1]"));
+			    alert("لطفا ابتدا اطلاعات پرسنلی را ثبت نمائید");
+				return false;
+		   }
+		   if(TabState==2)
+		   {			   
+			   FuncCreateTemplateFamilyMembers();
+			   FuncGetAllFamilyMember();
+		   }
+
+
+		}
+		 
+
+		function FuncCloseThisModal(element)
+		{
+		  $(element).closest("div.modal").removeClass("show");
+		  $(element).closest("div.modal").css("display","none");
+		}
+		 
+		function FuncCreateTemplatePersonnel()
+		{
+
+			var text=` <div class="col-md-12">
+
+							<div class="row g-3 align-items-center">
+								<div class="col-md-6">
+									<label for="input1" class="form-label">نام</label>
+									<input type="text" class="form-control" id="txtName" autocomplete="off">
+								</div>
+								<div class="col-md-6">
+									<label for="input2" class="form-label">نام خانوادگی</label>
+									<input type="text" class="form-control" id="txtLastName" autocomplete="off">
+								</div>
+								<div class="col-md-6">
+									<label for="input2" class="form-label">  کد ملی </label>
+									<input type="text" class="form-control" id="txtNationalcode" autocomplete="off">
+								</div>
+								<div class="col-md-6">
+									<label for="input2" class="form-label">   شماره تلفن   </label>
+									<input type="text" class="form-control" id="txtPhoneNumber" autocomplete="off">
+								</div>
+								<div class="col-md-6">
+
+									<input type="button" class="btn btn-success" onclick="FuncSavePersonnel();" id="btnSavePersonnel" value="ثبت">
+								</div>
+							</div>
+
+
+						</div>`;
+
+						$("#divContent").html(text);
+
+		}
+
+
+		function FuncGetPersonnel()
+		{
+			var personnelId=$("#divContent").attr("AttrPersonnelId");
+			 $.ajax({
+			 url:"/Home/GetPersonnel",
+			 data:{personnelId:personnelId},
+			 type:"post",
+			 dataType:"json",
+			 success:function(dataResponse)
+			 {
+				 var personnel=dataResponse.data;
+				 if(personnel==null) return false;
+				 $("#txtName").val(personnel.name);
+				 $("#txtLastName").val(personnel.lastName);
+				 $("#txtNationalcode").val(personnel.nationalCode);
+				 $("#txtPhoneNumber").val(personnel.phoneNumber);
+			 }
+		 })
+		}
+
+		 
+		function FuncSavePersonnel()
+		{
+
+		 var personnelId=$("#divContent").attr("AttrPersonnelId");
+		 var name=String($("#txtName").val()).trim();
+		 var lastName=String($("#txtLastName").val()).trim();
+		 var nationalCode=String($("#txtNationalcode").val()).trim();
+		 var phoneNumber=String($("#txtPhoneNumber").val()).trim();
+
+		 var personnelData={
+			 "Id":personnelId,
+			 "Name":name,
+			 "LastName":lastName,
+			 "NationalCode":nationalCode,
+			 "PhoneNumber":phoneNumber,
+		 };
+
+
+
+
+		 $.ajax({
+			 url:"/Home/SavePersonnel",
+			 data:{personnelData:personnelData},
+			 type:"post",
+			 dataType:"json",
+			 success:function(dataResponse)
+			 {
+
+				 var {isSuccess,msg}= dataResponse;
+				 var {id}=dataResponse.data;
+				 alert(msg);
+				 if(isSuccess==false) return false;
+				 $("#divContent").attr("AttrPersonnelId",id);
+				 FuncGetAllPersonnel();
+			 }
+		 })
+
+
+		}
+
+
+		function FuncDeletePersonnel(element)
+		{
+			var personnelId=$(element).attr("AttrPersonnelId");
+			var confirmValue=confirm("آیا مایل به حذف اطلاعات هستید؟");
+			if(!confirmValue) return false;
+
+
+			 $.ajax({
+			 url:"/Home/DeletePersonnel",
+			 data:{personnelId:personnelId},
+			 type:"post",
+			 dataType:"json",
+			 success:function(dataResponse)
+			 {
+
+				 var {isSuccess,msg}= dataResponse;
+				 alert(msg);
+				 if(isSuccess==false) return false;
+
+				 FuncGetAllPersonnel();
+			 }
+		 })
+		}
+
+
+
+
+		//************************************************************************************ */
+
+		function FuncCreateTemplateFamilyMembers()
+		{
+	    var text=`<div class="container">
+
+		 <div class="row g-3 align-items-center">
+		  
+			<table class="table table-bordered" style="margin-top:25px;height:200px;">
+				<thead>
+					<tr>
+						<th>نام</th>
+						<th>نام خانوادگی</th>
+						<th>کد ملی</th>
+						<th> شماره تلفن  </th>
+						<th>  عملیات    </th>
+					</tr>
+				</thead>
+				<tbody id="tbodyFamilyMember">
+				</tbody>
+			</table>
+
+			<input type="button" id="btnAddFamilyMember" value="افزودن" AttrFamilyMemberId="0"  class="btn btn-success mb-3" onclick="FuncShowFormFamilyMember(this,1);" />
+			<div id="divContentFamilyMember">
+			
+			</div>
+
+		</div>`;
+
+			  $("#divContent").html(text);
+		}
+		function FuncGetAllFamilyMember()
+		{
+			 var personnelId=$("#divContent").attr("AttrPersonnelId");
+			 $.ajax({
+			 url:"/Home/GetAllFamilyMember",
+			 data:{personnelId:personnelId },
+			 type:"post",
+			 dataType:"json",
+			 success:function(dataResponse)
+			 {
+				 var text='';
+				var familyMembers= dataResponse.data;
+				for	(var i=0;i<familyMembers.length;i++)
+				{
+					 text+=`<tr>
+				<td>${familyMembers[i].name}</td>
+				<td>${familyMembers[i].lastName}</td>
+				<td>${familyMembers[i].nationalCode}</td>
+				<td>${familyMembers[i].phoneNumber}</td>
+				<td>
+					<input type="button" class="btn btn-warning btn-sm" value="ویرایش" AtrrElementModalId="exampleModal"  AttrFamilyMemberId="${familyMembers[i].id}" onclick="FuncShowFormFamilyMember(this,2);" />
+					<input type="button" class="btn btn-danger btn-sm" value="حذف"  AttrFamilyMemberId="${familyMembers[i].id}" onclick="FuncDeleteFamilyMember(this);" />
+				</td>
+				</tr>`;
+				}
+				$("#tbodyFamilyMember").html(text);
+			 }
+		 })
+		}
+
+
+		function FuncShowFormFamilyMember(element,stateAddOrEdit)
+		{
+			
+			var text=`<div class="col-md-2">
+					<label for="input1" class="form-label">نام</label>
+					<input type="text" class="form-control" id="familyMember-name" autocomplete="off">
+				</div>
+				<div class="col-md-2">
+					<label for="input2" class="form-label">نام خانوادگی</label>
+					<input type="text" class="form-control" id="familyMember-lastName" autocomplete="off">
+				</div>
+				<div class="col-md-2">
+					<label for="input2" class="form-label">  کد ملی </label>
+					<input type="text" class="form-control" id="familyMember-nationalcode" autocomplete="off">
+				</div>
+				<div class="col-md-2">
+					<label for="input2" class="form-label">   شماره تلفن   </label>
+					<input type="text" class="form-control" id="familyMember-PhoneNumber" autocomplete="off">
+				</div>
+				<div class="col-md-2">
+					<input type="button" class="btn btn-success" onclick="FuncSaveFamilyMember();" id="btnSaveFamilyMember" value="ثبت" style="margin-top: 25px;">
+				</div>
+			</div>`;
+
+			$("#divContentFamilyMember").html(text);
+			var familyMemberId=$(element).attr("AttrFamilyMemberId");
+			$("#divContentFamilyMember").attr("AttrFamilyMemberId",familyMemberId);
+			FuncGetFamilyMember();
+		}
+
+		 
+		function FuncGetFamilyMember()
+		{
+			var familyMemberId=$("#divContentFamilyMember").attr("AttrFamilyMemberId");
+			 $.ajax({
+			 url:"/Home/GetFamilyMember",
+			 data:{familyMemberId:familyMemberId},
+			 type:"post",
+			 dataType:"json",
+			 success:function(dataResponse)
+			 {
+				 var familyMember=dataResponse.data;
+				 if(familyMember==null) return false;
+				 $("#familyMember-name").val(familyMember.name);
+				 $("#familyMember-lastName").val(familyMember.lastName);
+				 $("#familyMember-nationalcode").val(familyMember.nationalCode);
+				 $("#familyMember-PhoneNumber").val(familyMember.phoneNumber);
+
+			 }
+		 })
+		}
+
+
+
+
+
+		function FuncSaveFamilyMember()
+		{
+	     var familyMemberId=$("#divContentFamilyMember").attr("AttrFamilyMemberId");
+	     var personnelId=$("#divContent").attr("AttrPersonnelId");
+		 var name=String($("#familyMember-name").val()).trim();
+		 var lastName=String($("#familyMember-lastName").val()).trim();
+		 var nationalCode=String($("#familyMember-nationalcode").val()).trim();
+		 var phoneNumber=String($("#familyMember-PhoneNumber").val()).trim();
+
+		 var familyMemberData={
+			 "Id":familyMemberId,
+			 "PersonnelId":personnelId,
+			 "Name":name,
+			 "LastName":lastName,
+			 "NationalCode":nationalCode,
+			 "PhoneNumber":phoneNumber,
+		 };
+
+
+
+
+		 $.ajax({
+			 url:"/Home/SaveFamilyMember",
+			 data:{familyMemberData:familyMemberData},
+			 type:"post",
+			 dataType:"json",
+			 success:function(dataResponse)
+			 {
+
+				 var {isSuccess,msg}= dataResponse;
+				 var {id}=dataResponse.data;
+				 alert(msg);
+				 if(isSuccess==false) return false;
+				 $("#divContentFamilyMember").attr("AttrFamilyMemberId",id);
+				 $("#divContentFamilyMember").empty();
+				 FuncGetAllFamilyMember();
+			 }
+		 })
+		}
+
+
+		function FuncDeleteFamilyMember(element)
+		{
+			var familyMemberId=$(element).attr("AttrFamilyMemberId");
+			var confirmValue=confirm("آیا مایل به حذف اطلاعات هستید؟");
+			if(!confirmValue) return false;
+			   
+
+			 $.ajax({
+			 url:"/Home/DeleteFamilyMember",
+			 data:{familyMemberId:familyMemberId},
+			 type:"post",
+			 dataType:"json",
+			 success:function(dataResponse)
+			 {
+
+				 var {isSuccess,msg}= dataResponse;
+				 alert(msg);
+				 if(isSuccess==false) return false;
+
+				 FuncGetAllFamilyMember();
+			 }
+		 })
+		}
+	</script>
+}
+
