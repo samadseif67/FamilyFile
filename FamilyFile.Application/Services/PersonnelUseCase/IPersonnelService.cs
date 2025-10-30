@@ -10,7 +10,7 @@ namespace FamilyFile.Application.Services.PersonnelUseCase
 {
     public interface IPersonnelService
     {
-        ServiceResult<PersonnelData> SavePersonnel(PersonnelData personnelData);
+        Task< ServiceResult<PersonnelData>> SavePersonnel(PersonnelData personnelData);
         ServiceResult<PersonnelData> DeletePersonnel(Guid id);
         ServiceResult<List<PersonnelData>> GetAllPersonnel();
         ServiceResult<PersonnelData> GetPersonnel(Guid id);

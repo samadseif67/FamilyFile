@@ -6,6 +6,7 @@ using FamilyFile.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace FamilyFile.Web.Controllers
 {
@@ -39,9 +40,9 @@ namespace FamilyFile.Web.Controllers
             return Ok(result);
         }
 
-        public ActionResult SavePersonnel(PersonnelData personnelData)
+        public async Task<ActionResult> SavePersonnel(PersonnelData personnelData)
         {
-            var result = _personnelService.SavePersonnel(personnelData);
+            var result =await _personnelService.SavePersonnel(personnelData);
             return Ok(result);
         }
 
@@ -73,9 +74,9 @@ namespace FamilyFile.Web.Controllers
             return Ok(result);
         }
 
-        public ActionResult SaveFamilyMember(FamilyMemberData familyMemberData)
+        public async Task<ActionResult> SaveFamilyMember(FamilyMemberData familyMemberData)
         {
-            var result = _familyMemberService.SaveFamilyMember(familyMemberData);
+            var result =await _familyMemberService.SaveFamilyMember(familyMemberData);
             return Ok(result);
         }
         #endregion FamilyMember

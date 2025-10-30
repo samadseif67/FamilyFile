@@ -2,6 +2,7 @@
 using FamilyFile.Application.Dto;
 using FamilyFile.Application.Enums;
 using FamilyFile.Application.Mapping;
+using FamilyFile.Application.Validators;
 using FamilyFile.Domain.Entities;
 using FamilyFile.Domain.Interfaces;
 using System;
@@ -20,11 +21,25 @@ namespace FamilyFile.Application.Services.PersonnelUseCase
         {
             _PersonnelRepository = PersonnelRepository;
         }
-        public ServiceResult<PersonnelData> SavePersonnel(PersonnelData PersonnelData)
+        public async Task<ServiceResult<PersonnelData>> SavePersonnel(PersonnelData PersonnelData)
         {
 
             try
             {
+
+                var errors = (await new PersonnelDataValidator(_PersonnelRepository).ValidateAsync(PersonnelData)).GetErrorsValidator();
+                if (errors.Count() > 0)
+                {
+                    return new ServiceResult<PersonnelData>()
+                    {
+                        Data = null,
+                        Errors = errors,
+                        IsSuccess = false,
+                        Msg = Errors.Cancell.GetDescription()
+                    };
+                }
+
+
                 Personnel PersonnelRegister = new Personnel();
                 var Personnel = (Personnel)MappingAuto<PersonnelData, Personnel>.Map(PersonnelData);
 

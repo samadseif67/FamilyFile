@@ -140,3 +140,5 @@ E:\projectEducation\FamilyFile\FamilyFile.Web\obj\Debug\net8.0\refint\FamilyFile
 E:\projectEducation\FamilyFile\FamilyFile.Web\obj\Debug\net8.0\FamilyFile.Web.pdb
 E:\projectEducation\FamilyFile\FamilyFile.Web\obj\Debug\net8.0\FamilyFile.Web.genruntimeconfig.cache
 E:\projectEducation\FamilyFile\FamilyFile.Web\obj\Debug\net8.0\ref\FamilyFile.Web.dll
+E:\projectEducation\FamilyFile\FamilyFile.Web\bin\Debug\net8.0\FluentValidation.dll
+E:\projectEducation\FamilyFile\FamilyFile.Web\bin\Debug\net8.0\FluentValidation.DependencyInjectionExtensions.dll

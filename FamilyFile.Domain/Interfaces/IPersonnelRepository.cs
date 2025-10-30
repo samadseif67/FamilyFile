@@ -9,6 +9,6 @@ namespace FamilyFile.Domain.Interfaces
 {
     public interface IPersonnelRepository:IRepository<Personnel>
     {
-
+        Task<bool> IsExistNationalCode(string nationalCode);
     }
 }

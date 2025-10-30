@@ -13,9 +13,9 @@ namespace FamilyFile.Application.Common
         public T Data { get; set; }
         public List<string> Errors { get; set; }
         public string Msg { get; set; }
-        public static ServiceResult<T> Result(T data,List<string> errors,string msg)
+        public static ServiceResult<T> Result(T data, List<string> errors, string msg)
         {
-            return new ServiceResult<T>(){ Data = data, Errors = errors, Msg= msg };
+            return new ServiceResult<T>() { Data = data, Errors = errors, Msg = msg };
         }
     }
 }

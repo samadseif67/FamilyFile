@@ -2,8 +2,10 @@
 using FamilyFile.Application.Dto;
 using FamilyFile.Application.Enums;
 using FamilyFile.Application.Mapping;
+using FamilyFile.Application.Validators;
 using FamilyFile.Domain.Entities;
 using FamilyFile.Domain.Interfaces;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +22,25 @@ namespace FamilyFile.Application.Services.FamilyMemberUseCase
         {
             _familyMemberRepository = familyMemberRepository;
         }
-        public ServiceResult<FamilyMemberData> SaveFamilyMember(FamilyMemberData familyMemberData)
+        public async Task<ServiceResult<FamilyMemberData>> SaveFamilyMember(FamilyMemberData familyMemberData)
         {
 
             try
             {
+
+                var errors =(await new FamilyMemberDataValidator().ValidateAsync(familyMemberData)).GetErrorsValidator();
+                if (errors.Count() > 0)
+                {
+                    return new ServiceResult<FamilyMemberData>()
+                    {
+                        Data = null,
+                        Errors = errors,
+                        IsSuccess = false,
+                        Msg = Errors.Cancell.GetDescription()
+                    };
+                }
+                 
+
                 FamilyMember familyMemberRegister = new FamilyMember();
                 var familyMember = (FamilyMember)MappingAuto<FamilyMemberData, FamilyMember>.Map(familyMemberData);
 
@@ -38,7 +54,7 @@ namespace FamilyFile.Application.Services.FamilyMemberUseCase
                     familyMemberRegister = _familyMemberRepository.Update(familyMember);
                     _familyMemberRepository.SaveChanges();
                 }
-                
+
 
                 var FamilyMemberResonse = (FamilyMemberData)MappingAuto<FamilyMember, FamilyMemberData>.Map(familyMemberRegister);
                 return new ServiceResult<FamilyMemberData>() { Data = FamilyMemberResonse, IsSuccess = true, Msg = Errors.Ok.GetDescription() };
@@ -71,7 +87,7 @@ namespace FamilyFile.Application.Services.FamilyMemberUseCase
             try
             {
                 var findFamilyMember = _familyMemberRepository.Find(id);
-                var result= MappingAuto<FamilyMember, FamilyMemberData>.Map(findFamilyMember);
+                var result = MappingAuto<FamilyMember, FamilyMemberData>.Map(findFamilyMember);
                 return new ServiceResult<FamilyMemberData>() { Data = result, IsSuccess = true, Msg = Errors.Ok.GetDescription() };
             }
             catch (Exception)
@@ -84,7 +100,7 @@ namespace FamilyFile.Application.Services.FamilyMemberUseCase
         {
             try
             {
-                var familyMember = _familyMemberRepository.GetAll().Where(x=>x.PersonnelId==id).ToList();
+                var familyMember = _familyMemberRepository.GetAll().Where(x => x.PersonnelId == id).ToList();
                 var result = MappingAuto<FamilyMember, FamilyMemberData>.MapLst(familyMember);
                 return new ServiceResult<List<FamilyMemberData>>() { Data = result, IsSuccess = true, Msg = Errors.Ok.GetDescription() };
             }

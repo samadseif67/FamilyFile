@@ -10,7 +10,7 @@ namespace FamilyFile.Application.Services.FamilyMemberUseCase
 {
     public interface IFamilyMemberService
     {
-        ServiceResult<FamilyMemberData> SaveFamilyMember(FamilyMemberData familyMemberData);
+        Task<ServiceResult<FamilyMemberData>> SaveFamilyMember(FamilyMemberData familyMemberData);
         ServiceResult<FamilyMemberData> DeleteFamilyMember(Guid id);
         ServiceResult<List<FamilyMemberData>> GetAllFamilyMember(Guid id);
         ServiceResult<FamilyMemberData> GetFamilyMember(Guid id);
