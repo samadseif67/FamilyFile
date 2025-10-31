@@ -166,7 +166,7 @@
            if(TabState==2 && personnelId=="0")
            {
                 FuncActiveTab($("#divCollectionTab").find("[AttrTabState=1]"));
-                alert("لطفا ابتدا اطلاعات پرسنلی را ثبت نمائید");
+                FuncToastify("لطفا ابتدا اطلاعات پرسنلی را ثبت نمائید",false);
                 return false;
            }
            if(TabState==2)
@@ -193,19 +193,19 @@
                             <div class="row g-3 align-items-center">
                                 <div class="col-md-6">
                                     <label for="input1" class="form-label">نام</label>
-                                    <input type="text" class="form-control" id="txtName" autocomplete="off">
+                                    <input type="text" class="form-control" id="personnel-Name" maxlength="50" autocomplete="off">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="input2" class="form-label">نام خانوادگی</label>
-                                    <input type="text" class="form-control" id="txtLastName" autocomplete="off">
+                                    <input type="text" class="form-control" id="personnel-LastName" maxlength="50" autocomplete="off">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="input2" class="form-label">  کد ملی </label>
-                                    <input type="text" class="form-control" id="txtNationalcode" autocomplete="off">
+                                    <input type="text" class="form-control" id="personnel-Nationalcode" maxlength="10" autocomplete="off">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="input2" class="form-label">   شماره تلفن   </label>
-                                    <input type="text" class="form-control" id="txtPhoneNumber" autocomplete="off">
+                                    <input type="text" class="form-control" id="personnel-PhoneNumber" maxlength="12" autocomplete="off">
                                 </div>
                                 <div class="col-md-6">
 
@@ -233,10 +233,10 @@
              {
                  var personnel=dataResponse.data;
                  if(personnel==null) return false;
-                 $("#txtName").val(personnel.name);
-                 $("#txtLastName").val(personnel.lastName);
-                 $("#txtNationalcode").val(personnel.nationalCode);
-                 $("#txtPhoneNumber").val(personnel.phoneNumber);
+                 $("#personnel-Name").val(personnel.name);
+                 $("#personnel-LastName").val(personnel.lastName);
+                 $("#personnel-Nationalcode").val(personnel.nationalCode);
+                 $("#personnel-PhoneNumber").val(personnel.phoneNumber);
              }
          })
         }
@@ -246,10 +246,10 @@
         {
 
          var personnelId=$("#divContent").attr("AttrPersonnelId");
-         var name=String($("#txtName").val()).trim();
-         var lastName=String($("#txtLastName").val()).trim();
-         var nationalCode=String($("#txtNationalcode").val()).trim();
-         var phoneNumber=String($("#txtPhoneNumber").val()).trim();
+         var name=String($("#personnel-Name").val()).trim();
+         var lastName=String($("#personnel-LastName").val()).trim();
+         var nationalCode=String($("#personnel-Nationalcode").val()).trim();
+         var phoneNumber=String($("#personnel-PhoneNumber").val()).trim();
 
          var personnelData={
              "Id":personnelId,
@@ -304,7 +304,7 @@
              {
 
                  var {isSuccess,msg}= dataResponse;
-                 alert(msg);
+                 FuncToastify(msg,isSuccess);
                  if(isSuccess==false) return false;
 
                  FuncGetAllPersonnel();
@@ -337,7 +337,7 @@
                 </tbody>
             </table>
 
-            <input type="button" id="btnAddFamilyMember" value="افزودن" AttrFamilyMemberId="0"  class="btn btn-success mb-3" onclick="FuncShowFormFamilyMember(this,1);" />
+            <input type="button" id="btnAddFamilyMember" value="افزودن" AttrFamilyMemberId="0" style="width:100px;"  class="btn btn-success mb-3" onclick="FuncShowFormFamilyMember(this,1);" />
             <div id="divContentFamilyMember">
 
             </div>
@@ -382,19 +382,19 @@
 
             var text=`<div class="col-md-2">
                     <label for="input1" class="form-label">نام</label>
-                    <input type="text" class="form-control" id="familyMember-name" autocomplete="off">
+                    <input type="text" class="form-control" id="familyMember-name" maxlength="50" autocomplete="off">
                 </div>
                 <div class="col-md-2">
                     <label for="input2" class="form-label">نام خانوادگی</label>
-                    <input type="text" class="form-control" id="familyMember-lastName" autocomplete="off">
+                    <input type="text" class="form-control" id="familyMember-lastName" maxlength="50" autocomplete="off">
                 </div>
                 <div class="col-md-2">
                     <label for="input2" class="form-label">  کد ملی </label>
-                    <input type="text" class="form-control" id="familyMember-nationalcode" autocomplete="off">
+                    <input type="text" class="form-control" id="familyMember-nationalcode" maxlength="10" autocomplete="off">
                 </div>
                 <div class="col-md-2">
                     <label for="input2" class="form-label">   شماره تلفن   </label>
-                    <input type="text" class="form-control" id="familyMember-PhoneNumber" autocomplete="off">
+                    <input type="text" class="form-control" id="familyMember-PhoneNumber" maxlength="12" autocomplete="off">
                 </div>
                 <div class="col-md-2">
                     <input type="button" class="btn btn-success" onclick="FuncSaveFamilyMember();" id="btnSaveFamilyMember" value="ثبت" style="margin-top: 25px;">
@@ -496,7 +496,7 @@
              {
 
                  var {isSuccess,msg}= dataResponse;
-                 alert(msg);
+                 FuncToastify(msg,isSuccess);
                  if(isSuccess==false) return false;
 
                  FuncGetAllFamilyMember();

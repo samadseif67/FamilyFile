@@ -31,3 +31,4 @@ E:\projectEducation\FamilyFile\FamilyFile.Domain\obj\Debug\net8.0\FamilyFile.Dom
 E:\projectEducation\FamilyFile\FamilyFile.Domain\obj\Debug\net8.0\refint\FamilyFile.Domain.dll
 E:\projectEducation\FamilyFile\FamilyFile.Domain\obj\Debug\net8.0\FamilyFile.Domain.pdb
 E:\projectEducation\FamilyFile\FamilyFile.Domain\obj\Debug\net8.0\ref\FamilyFile.Domain.dll
+E:\projectEducation\FamilyFile\FamilyFile.Domain\obj\Debug\net8.0\FamilyFile.Domain.sourcelink.json

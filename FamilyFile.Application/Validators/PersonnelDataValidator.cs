@@ -19,13 +19,13 @@ namespace FamilyFile.Application.Validators
             RuleFor(x => x.Name).Cascade(CascadeMode.Stop).NotEmpty().WithMessage("نام الزامی می باشد").NotNull().WithMessage("نام الزامی می باشد");
             RuleFor(x => x.LastName).Cascade(CascadeMode.Stop).NotEmpty().WithMessage("نام خانوادگی الزامی می باشد").NotNull().WithMessage("نام خانوادگی الزامی می باشد");
             RuleFor(x => x.NationalCode).Cascade(CascadeMode.Stop).NotEmpty().WithMessage("کد ملی الزامی می باشد").NotNull().WithMessage("کد ملی الزامی می باشد");
-            RuleFor(x => x.PhoneNumber).Cascade(CascadeMode.Stop).NotEmpty().WithMessage("شماره همراه الزامی می باشد").NotNull().WithMessage("شماره همراه الزامی می باشد");
+            RuleFor(x => x.PhoneNumber).Cascade(CascadeMode.Stop).NotEmpty().WithMessage("شماره تلفن الزامی می باشد").NotNull().WithMessage("شماره تلفن الزامی می باشد");
             RuleFor(x => x).MustAsync(EventNationalCodeUnique).WithMessage("کد ملی مورد نظر تکراری می باشد");
         }
 
         private async Task<bool> EventNationalCodeUnique(PersonnelData e,CancellationToken token)
         {
-            return ! await _personnelRepository.IsExistNationalCode(e.NationalCode);
+            return ! await _personnelRepository.IsExistNationalCode(e.NationalCode,e.Id);
         }
     }
 }

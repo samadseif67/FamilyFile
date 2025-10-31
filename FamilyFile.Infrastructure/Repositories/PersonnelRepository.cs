@@ -16,9 +16,9 @@ namespace FamilyFile.Infrastructure.Repositories
         {
 
         }
-        public async Task<bool> IsExistNationalCode(string nationalCode)
+        public async Task<bool> IsExistNationalCode(string nationalCode,Guid personnelId)
         {
-            var result =await _db.Personnels.AnyAsync(x => x.NationalCode == nationalCode);
+            var result =await _db.Personnels.AnyAsync(x => x.NationalCode == nationalCode && x.Id!= personnelId);
             return result;
         }
 

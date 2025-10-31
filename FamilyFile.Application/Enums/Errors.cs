@@ -11,7 +11,7 @@ namespace FamilyFile.Application.Enums
     {
         [Description("خطا:عملیات با خطا مواجهه شد")]
         Cancell=1,
-        [Description("اطلاعات با موفقیت انجام شد")]
+        [Description("عملیات با موفقیت انجام شد")]
         Ok=2
 
     }

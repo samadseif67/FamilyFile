@@ -43,3 +43,4 @@ E:\projectEducation\FamilyFile\FamilyFile.Application\obj\Debug\net8.0\FamilyFil
 E:\projectEducation\FamilyFile\FamilyFile.Application\obj\Debug\net8.0\refint\FamilyFile.Application.dll
 E:\projectEducation\FamilyFile\FamilyFile.Application\obj\Debug\net8.0\FamilyFile.Application.pdb
 E:\projectEducation\FamilyFile\FamilyFile.Application\obj\Debug\net8.0\ref\FamilyFile.Application.dll
+E:\projectEducation\FamilyFile\FamilyFile.Application\obj\Debug\net8.0\FamilyFile.Application.sourcelink.json

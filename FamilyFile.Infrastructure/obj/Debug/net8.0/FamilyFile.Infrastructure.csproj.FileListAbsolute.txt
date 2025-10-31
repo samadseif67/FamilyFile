@@ -49,3 +49,4 @@ E:\projectEducation\FamilyFile\FamilyFile.Infrastructure\obj\Debug\net8.0\refint
 E:\projectEducation\FamilyFile\FamilyFile.Infrastructure\obj\Debug\net8.0\FamilyFile.Infrastructure.pdb
 E:\projectEducation\FamilyFile\FamilyFile.Infrastructure\obj\Debug\net8.0\FamilyFile.Infrastructure.genruntimeconfig.cache
 E:\projectEducation\FamilyFile\FamilyFile.Infrastructure\obj\Debug\net8.0\ref\FamilyFile.Infrastructure.dll
+E:\projectEducation\FamilyFile\FamilyFile.Infrastructure\obj\Debug\net8.0\FamilyFile.Infrastructure.sourcelink.json
