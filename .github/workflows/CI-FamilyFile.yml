@@ -27,7 +27,22 @@ jobs:
       run: dotnet restore FamilyFile.sln
 
     - name: Build project
-      run: dotnet build FamilyFile.sln --configuration Release --no-restore
+      run: dotnet build FamilyFile.sln --configuration Release --no-restore  #کامپایل کردن پروژه در حالت پروداکشن
+      # --no-restore چون قبلاً restore انجام شده
+      #-configuration Release کامپیایل کردن پروژه در حالت پروداکشن
+      ##dotnet build --configuration Release --output ./artifacts  برای تغییر مسیر خروجی
+
       
     - name: Run unit tests  
       run: dotnet test FamilyFile.sln --no-restore --verbosity normal
+     # --verbosity normal برای لاگ‌های شفاف در کنسول
+     ##یعنی خروجی‌ها خوانا و شامل نتایج تست‌ها خواهند بود
+
+    #کاربرد: سطح جزئیات خروجی (لاگ) دستور را تعیین می‌کند.
+    #quiet: حداقل خروجی (فقط خطاها).
+    #minimal: خروجی مختصر (مانند تعداد تست‌های موفق/ناموفق).
+    #normal: خروجی استاندارد (شامل نام تست‌ها، نتایج، و خلاصه نهایی).
+    #detailed: جزئیات بیشتری از فرآیند بیلد و تست.
+    #diagnostic: جزئیات کامل (برای عیب‌یابی پیشرفته).
+
+
