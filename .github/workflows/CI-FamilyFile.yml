@@ -1,0 +1,33 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: FamilyFileAppCICD
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code 
+      uses: actions/checkout@v4  #دریافت کد از Repository
+
+    - name: Setup .NET 8 SDK
+      uses: actions/setup-dotnet@v4  # اکشن رسمی برای نصب دات‌نت
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore FamilyFile.sln
+
+    - name: Build project
+      run: dotnet build FamilyFile.sln --configuration Release --no-restore
+      
+    - name: Run unit tests  
+      run: dotnet test FamilyFile.sln --no-restore --verbosity normal
